@@ -4,10 +4,10 @@ import { authMiddleware } from "../middlewares/AuthMiddleware";
 
 const transactionsRouter = Router();
 
-transactionsRouter.get("/", authMiddleware, getTransactions);
-transactionsRouter.post("/", authMiddleware, createTransaction);
-transactionsRouter.get("/:id", authMiddleware, getTransactionById);
-transactionsRouter.patch("/update/:id", authMiddleware, updateTransaction);
+transactionsRouter.get("/", getTransactions);
+transactionsRouter.post("/", createTransaction);
+transactionsRouter.get("/:id", getTransactionById);
+transactionsRouter.patch("/:id", updateTransaction);
 
 
 

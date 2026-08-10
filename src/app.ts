@@ -10,6 +10,7 @@ import { pageNotFound } from "./middlewares/PageNotFound";
 import { authRouter } from "./routes/auth";
 import { transactionsRouter } from "./routes/transactions";
 import { categoryRouter } from "./routes/category";
+import { authMiddleware } from "./middlewares/AuthMiddleware";
 
 const app = express();
 
@@ -22,8 +23,8 @@ app.use(express.json());
 
 
 app.use("/api/auth", authRouter);
-app.use("/api/transactions", transactionsRouter);
-app.use("/api/category", categoryRouter);
+app.use("/api/transactions",authMiddleware, transactionsRouter);
+app.use("/api/category",authMiddleware ,categoryRouter);
 
 
 app.use(pageNotFound);
