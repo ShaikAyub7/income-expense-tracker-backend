@@ -113,7 +113,7 @@
             "type": "string"
           },
           {
-            "name": "payment_type",
+            "name": "paymentMethod",
             "in": "query",
             "type": "string"
           },
@@ -183,10 +183,7 @@
                 "description": {
                   "example": "any"
                 },
-                "payment_type": {
-                  "example": "any"
-                },
-                "category": {
+                "paymentMethod": {
                   "example": "any"
                 },
                 "categoryId": {
@@ -207,7 +204,7 @@
       }
     },
     "/api/transactions/{id}": {
-      "post": {
+      "get": {
         "tags": [
           "Transactions"
         ],
@@ -233,7 +230,7 @@
       }
     },
     "/api/transactions/update/{id}": {
-      "post": {
+      "patch": {
         "tags": [
           "Transactions"
         ],
@@ -271,7 +268,7 @@
                 "type": {
                   "example": "any"
                 },
-                "payment_type": {
+                "paymentMethod": {
                   "example": "any"
                 }
               }
