@@ -56,23 +56,25 @@ export const getCategories = async (req: AuthenticatedRequest, res: Response) =>
         );
     }
 
-    const Categories = await prisma.category.findMany({
-        where:{
-            userId:userId
-        },
-        include: {
-            _count: {
+   const Categories = await prisma.category.findMany({
+  where: {
+    
+      
+        userId: userId,
+  },
+  include: {
+    _count: {
       select: {
         transactions: true,
       },
     },
   },
-    })
+});
 
 
 const result = Categories.map((category) => ({
   ...category,
-  totalTransactions: category._count.transactions,
+  totalTransactions: (category as any)?._count?.transactions ?? 0,
 }));
     res.status(StatusCodes.OK).json({
     success: true,
