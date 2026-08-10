@@ -14,13 +14,11 @@ export const authMiddleware = async (
   }
   const token = authHeader.split(" ")[1];
 
-
   try {
     const decoded = verifyJwt(token);
     req.user = decoded;
 
     next();
-    
   } catch (error) {
     throw new UnauthorizedError("Invalid or expired token");
   }

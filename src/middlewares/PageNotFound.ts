@@ -6,4 +6,4 @@ export const pageNotFound = (req: Request, res: Response) => {
     success: false,
     message: `Route Not Found [${req.originalUrl}]`,
   });
-}; 
+};

@@ -6,7 +6,7 @@ import { prisma } from "../lib/prisma";
 import bcrypt from "bcrypt";
 
 export const register = async (req: Request, res: Response) => {
-      // #swagger.tags = ['Authentication']
+  // #swagger.tags = ['Authentication']
 
   const { name, email, password } = req.body;
 
@@ -22,13 +22,10 @@ export const register = async (req: Request, res: Response) => {
   });
 
   if (existingUser) {
-    throw new ApiError(
-      "User already exists",
-      StatusCodes.BAD_REQUEST,
-    );
+    throw new ApiError("User already exists", StatusCodes.BAD_REQUEST);
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10); 
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.create({
     data: {
@@ -55,11 +52,8 @@ export const register = async (req: Request, res: Response) => {
   });
 };
 
-
-
-
 export const login = async (req: Request, res: Response) => {
-        // #swagger.tags = ['Authentication']
+  // #swagger.tags = ['Authentication']
 
   const { email, password } = req.body;
 
@@ -75,19 +69,13 @@ export const login = async (req: Request, res: Response) => {
   });
 
   if (!user) {
-    throw new ApiError(
-      "User not found",
-      StatusCodes.NOT_FOUND,
-    );
+    throw new ApiError("User not found", StatusCodes.NOT_FOUND);
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    throw new ApiError(
-      "Invalid credentials",
-      StatusCodes.UNAUTHORIZED,
-    );
+    throw new ApiError("Invalid credentials", StatusCodes.UNAUTHORIZED);
   }
 
   const accessToken = createJwt({

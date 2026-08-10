@@ -21,11 +21,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());
 
-
 app.use("/api/auth", authRouter);
-app.use("/api/transactions",authMiddleware, transactionsRouter);
-app.use("/api/category",authMiddleware ,categoryRouter);
-
+app.use("/api/transactions", authMiddleware, transactionsRouter);
+app.use("/api/category", authMiddleware, categoryRouter);
 
 app.use(pageNotFound);
 app.use(errorHandler);

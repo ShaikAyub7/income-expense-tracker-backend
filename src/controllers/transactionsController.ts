@@ -6,60 +6,50 @@ import { prisma } from "../lib/prisma";
 export const createTransaction = async (req: Request, res: Response) => {
   // #swagger.tags = ['Transactions']
 
-  const {name, amount, type, description, paymentMethod, categoryId ,date} = req.body;
+  const { name, amount, type, description, paymentMethod, categoryId, date } =
+    req.body;
 
   const userId = req.user?.userId;
-    if (!amount || !type || !description||!paymentMethod||!categoryId) {
+  if (!amount || !type || !description || !paymentMethod || !categoryId) {
     throw new ApiError(
-        "Please provide amount, type and description,paymentMethod,categoryId",
-        StatusCodes.BAD_REQUEST,
+      "Please provide amount, type and description,paymentMethod,categoryId",
+      StatusCodes.BAD_REQUEST,
     );
-    }
+  }
 
-if (!userId) {
-    throw new ApiError(
-        "User not found",
-        StatusCodes.NOT_FOUND,
-    );
-}
+  if (!userId) {
+    throw new ApiError("User not found", StatusCodes.NOT_FOUND);
+  }
 
-    const transaction = await prisma.transaction.create({
-     data: {
-    amount,
-    type,
-    description,
-    userId: userId,
-    name,
-    date,
-    paymentMethod,
-    categoryId,
-  },
+  const transaction = await prisma.transaction.create({
+    data: {
+      amount,
+      type,
+      description,
+      userId: userId,
+      name,
+      date,
+      paymentMethod,
+      categoryId,
+    },
     include: {
-    category: true,
-  },
-});
+      category: true,
+    },
+  });
 
   res.status(StatusCodes.CREATED).json({
-        success: true,
-        message: "Transaction created successfully",
-        transaction
-    });
-}
+    success: true,
+    message: "Transaction created successfully",
+    transaction,
+  });
+};
 
-
-export const getTransactions = async (
-  req: Request,
-  res: Response
-) => {
-
+export const getTransactions = async (req: Request, res: Response) => {
   // #swagger.tags = ['Transactions']
   const userId = req.user?.userId;
 
   if (!userId) {
-    throw new ApiError(
-      "User not authenticated",
-      StatusCodes.UNAUTHORIZED
-    );
+    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
   }
 
   const {
@@ -86,7 +76,6 @@ export const getTransactions = async (
     where.categoryId = String(categoryId);
   }
 
-  
   if (paymentMethod) {
     where.paymentMethod = String(paymentMethod);
   }
@@ -102,7 +91,6 @@ export const getTransactions = async (
     };
   }
 
- 
   if (startDate || endDate) {
     where.createdAt = {};
 
@@ -144,24 +132,17 @@ export const getTransactions = async (
   });
 };
 
-
 export const getTransactionById = async (req: Request, res: Response) => {
   // #swagger.tags = ['Transactions']
-const id = String(req.params.id);
+  const id = String(req.params.id);
   const userId = req.user?.userId;
 
   if (!userId) {
-    throw new ApiError(
-      "User not authenticated",
-      StatusCodes.UNAUTHORIZED
-    );
+    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
   }
 
   if (!id) {
-    throw new ApiError(
-      "Transaction id is required",
-      StatusCodes.BAD_REQUEST
-    );
+    throw new ApiError("Transaction id is required", StatusCodes.BAD_REQUEST);
   }
 
   const transaction = await prisma.transaction.findUnique({
@@ -174,10 +155,7 @@ const id = String(req.params.id);
   });
 
   if (!transaction) {
-    throw new ApiError(
-      "Transaction not found",
-      StatusCodes.NOT_FOUND
-    );
+    throw new ApiError("Transaction not found", StatusCodes.NOT_FOUND);
   }
 
   res.status(StatusCodes.OK).json({
@@ -185,32 +163,19 @@ const id = String(req.params.id);
     message: "Transaction fetched successfully",
     transaction,
   });
-}
+};
 
-
-export const updateTransaction = async (
-  req: Request,
-  res: Response
-) => {
+export const updateTransaction = async (req: Request, res: Response) => {
   // #swagger.tags = ['Transactions']
 
   const userId = req.user?.userId;
-const id = String(req.params.id);
+  const id = String(req.params.id);
   if (!userId) {
-    throw new ApiError(
-      "User not authenticated",
-      StatusCodes.UNAUTHORIZED
-    );
+    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
   }
 
-  const {
-    amount,
-    categoryId,
-    name,
-    description,
-    type,
-    paymentMethod,
-  } = req.body;
+  const { amount, categoryId, name, description, type, paymentMethod } =
+    req.body;
 
   const existingTransaction = await prisma.transaction.findFirst({
     where: {
@@ -220,10 +185,7 @@ const id = String(req.params.id);
   });
 
   if (!existingTransaction) {
-    throw new ApiError(
-      "Transaction not found",
-      StatusCodes.NOT_FOUND
-    );
+    throw new ApiError("Transaction not found", StatusCodes.NOT_FOUND);
   }
 
   const transaction = await prisma.transaction.update({
@@ -232,9 +194,7 @@ const id = String(req.params.id);
     },
     data: {
       amount: amount !== undefined ? Number(amount) : undefined,
-      categoryId: categoryId !== undefined
-        ? String(categoryId)
-        : undefined,
+      categoryId: categoryId !== undefined ? String(categoryId) : undefined,
       name,
       description,
       type,
@@ -252,3 +212,25 @@ const id = String(req.params.id);
   });
 };
 
+
+export const deleteTransaction = async(req:Request,res:Response)=>{
+  const userId = req.user?.userId;
+  const id = String(req.params.id);
+
+    if (!userId) {
+    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
+  }
+
+  const transaction = await prisma.transaction.delete({
+    where:{
+      userId:userId,
+      id:id
+    }
+  })
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Transaction deleted successfully",
+    transaction,
+  });
+}

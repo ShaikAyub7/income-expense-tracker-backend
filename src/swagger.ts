@@ -18,7 +18,7 @@ const doc = {
     {
       name: "Authentication",
     },
-  
+
     {
       name: "Transactions",
     },
