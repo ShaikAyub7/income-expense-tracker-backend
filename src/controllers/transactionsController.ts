@@ -147,7 +147,7 @@ export const getTransactions = async (
 
 export const getTransactionById = async (req: Request, res: Response) => {
   // #swagger.tags = ['Transactions']
-  const { id } = req.params;
+const id = String(req.params.id);
   const userId = req.user?.userId;
 
   if (!userId) {
@@ -195,8 +195,7 @@ export const updateTransaction = async (
   // #swagger.tags = ['Transactions']
 
   const userId = req.user?.userId;
-  const { id } = req.params;
-
+const id = String(req.params.id);
   if (!userId) {
     throw new ApiError(
       "User not authenticated",
