@@ -231,6 +231,5 @@ export const deleteTransaction = async(req:Request,res:Response)=>{
   res.status(StatusCodes.OK).json({
     success: true,
     message: "Transaction deleted successfully",
-    transaction,
   });
 }
