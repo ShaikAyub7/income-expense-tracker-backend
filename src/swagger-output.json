@@ -260,6 +260,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Transactions"
+        ],
         "description": "",
         "parameters": [
           {

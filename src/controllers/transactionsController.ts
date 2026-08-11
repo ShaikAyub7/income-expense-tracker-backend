@@ -214,6 +214,8 @@ export const updateTransaction = async (req: Request, res: Response) => {
 
 
 export const deleteTransaction = async(req:Request,res:Response)=>{
+    // #swagger.tags = ['Transactions']
+
   const userId = req.user?.userId;
   const id = String(req.params.id);
 
