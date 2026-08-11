@@ -83,20 +83,25 @@ export const getCategories = async (
 };
 
 
-
-export const updateCategory = async(req:Request,res:Response)=>{
+export const updateCategory = async (
+  req: Request,
+  res: Response
+) => {
   // #swagger.tags = ['Categories']
 
   const userId = req.user?.userId;
   const id = String(req.params.id);
+
   if (!userId) {
-    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
+    throw new ApiError(
+      "User not authenticated",
+      StatusCodes.UNAUTHORIZED
+    );
   }
 
-  const {  name, description } =
-    req.body;
+  const { name, description } = req.body;
 
-  const existingCategory = await prisma.transaction.findFirst({
+  const existingCategory = await prisma.category.findFirst({
     where: {
       id,
       userId,
@@ -104,7 +109,10 @@ export const updateCategory = async(req:Request,res:Response)=>{
   });
 
   if (!existingCategory) {
-    throw new ApiError("Category not found", StatusCodes.NOT_FOUND);
+    throw new ApiError(
+      "Category not found",
+      StatusCodes.NOT_FOUND
+    );
   }
 
   const category = await prisma.category.update({
@@ -112,12 +120,9 @@ export const updateCategory = async(req:Request,res:Response)=>{
       id,
     },
     data: {
-      
       name,
       description,
-     
     },
-   
   });
 
   res.status(StatusCodes.OK).json({
@@ -125,28 +130,60 @@ export const updateCategory = async(req:Request,res:Response)=>{
     message: "Category updated successfully",
     category,
   });
-}
+};
 
-
-export const deleteCategory = async(req:Request,res:Response)=>{
+export const deleteCategory = async (
+  req: Request,
+  res: Response
+) => {
   // #swagger.tags = ['Categories']
+
   const userId = req.user?.userId;
   const id = String(req.params.id);
 
-    if (!userId) {
-    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
+  if (!userId) {
+    throw new ApiError(
+      "User not authenticated",
+      StatusCodes.UNAUTHORIZED
+    );
   }
 
-  const category = await prisma.category.delete({
-    where:{
-      userId:userId,
-      id:id
-    }
-  })
+  const category = await prisma.category.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  });
+
+  if (!category) {
+    throw new ApiError(
+      "Category not found",
+      StatusCodes.NOT_FOUND
+    );
+  }
+
+  const transactionCount = await prisma.transaction.count({
+    where: {
+      categoryId: id,
+      userId,
+    },
+  });
+
+  if (transactionCount > 0) {
+    throw new ApiError(
+      "Cannot delete category because it is used by transactions",
+      StatusCodes.BAD_REQUEST
+    );
+  }
+
+  await prisma.category.delete({
+    where: {
+      id,
+    },
+  });
 
   res.status(StatusCodes.OK).json({
     success: true,
     message: "Category deleted successfully",
-    category:category.id,
   });
-}
+};

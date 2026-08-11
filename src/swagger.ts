@@ -1,31 +1,34 @@
-import swaggerAutogen from "swagger-autogen";
+  import swaggerAutogen from "swagger-autogen";
 
-const doc = {
-  info: {
-    title: "Income Expense Api",
-  },
-  host: "localhost:5000",
-
-  securityDefinitions: {
-    BearerAuth: {
-      type: "apiKey",
-      name: "Authorization",
-      in: "header",
-      description: "Enter: Bearer ",
+  const doc = {
+    info: {
+      title: "Income Expense Api",
     },
-  },
-  tags: [
-    {
-      name: "Authentication",
+    host: "localhost:5000",
+
+    securityDefinitions: {
+      BearerAuth: {
+        type: "apiKey",
+        name: "Authorization",
+        in: "header",
+        description: "Enter: Bearer ",
+      },
     },
+    tags: [
+      {
+        name: "Authentication",
+      },
 
-    {
-      name: "Transactions",
-    },
-  ],
-};
+      {
+        name: "Transactions",
+      },
+      {
+        name:"Categories"
+      }
+    ],
+  };
 
-const outputFile = "./swagger-output.json";
-const routes = ["./app.ts"];
+  const outputFile = "./swagger-output.json";
+  const routes = ["./app.ts"];
 
-swaggerAutogen()(outputFile, routes, doc);
+  swaggerAutogen()(outputFile, routes, doc);

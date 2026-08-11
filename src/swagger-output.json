@@ -13,6 +13,9 @@
     },
     {
       "name": "Transactions"
+    },
+    {
+      "name": "Categories"
     }
   ],
   "schemes": [
@@ -338,7 +341,62 @@
         }
       }
     },
-    "/api/category/{{where{userId:userId}": {
+    "/api/category/{id}": {
+      "patch": {
+        "tags": [
+          "Categories"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Categories"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/category/{{where{id}": {
       "delete": {
         "description": "",
         "parameters": [
