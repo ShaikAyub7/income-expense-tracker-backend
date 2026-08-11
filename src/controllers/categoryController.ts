@@ -187,3 +187,60 @@ export const deleteCategory = async (
     message: "Category deleted successfully",
   });
 };
+
+
+
+
+
+
+
+
+
+
+
+export const getCategoryById = async (
+  req: Request,
+  res: Response
+) => {
+  // #swagger.tags = ['Categories']
+
+  const id = String(req.params.id);
+  const userId = req.user?.userId;
+
+  if (!userId) {
+    throw new ApiError(
+      "User not authenticated",
+      StatusCodes.UNAUTHORIZED
+    );
+  }
+
+  if (!id) {
+    throw new ApiError(
+      "Category id is required",
+      StatusCodes.BAD_REQUEST
+    );
+  }
+
+  const category = await prisma.category.findFirst({
+    where: {
+      id,
+      userId,
+    },
+    include: {
+      transactions: true,
+    },
+  });
+
+  if (!category) {
+    throw new ApiError(
+      "Category not found",
+      StatusCodes.NOT_FOUND
+    );
+  }
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Category fetched successfully",
+    category,
+  });
+};
