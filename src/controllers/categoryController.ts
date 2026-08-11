@@ -14,7 +14,7 @@ export const createCategory = async (
   res: Response,
 ) => {
 
-  
+
   // #swagger.tags = ['Categories']
   const { name, description } = req.body;
   const userId = req.user?.userId;
@@ -81,3 +81,72 @@ export const getCategories = async (
     result,
   });
 };
+
+
+
+export const updateCategory = async(req:Request,res:Response)=>{
+  // #swagger.tags = ['Categories']
+
+  const userId = req.user?.userId;
+  const id = String(req.params.id);
+  if (!userId) {
+    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
+  }
+
+  const {  name, description } =
+    req.body;
+
+  const existingCategory = await prisma.transaction.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  });
+
+  if (!existingCategory) {
+    throw new ApiError("Category not found", StatusCodes.NOT_FOUND);
+  }
+
+  const category = await prisma.category.update({
+    where: {
+      id,
+    },
+    data: {
+      
+      name,
+      description,
+     
+    },
+   
+  });
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Category updated successfully",
+    category,
+  });
+}
+
+
+export const deleteCategory = async(req:Request,res:Response)=>{
+  // #swagger.tags = ['Categories']
+  const userId = req.user?.userId;
+  const id = String(req.params.id);
+
+    if (!userId) {
+    throw new ApiError("User not authenticated", StatusCodes.UNAUTHORIZED);
+  }
+
+  const category = await prisma.category.delete({
+    where:{
+      userId:userId,
+      id:id
+    }
+  })
+
+  res.status(StatusCodes.OK).json({
+    success: true,
+    message: "Category deleted successfully",
+    category:category.id,
+  });
+}
