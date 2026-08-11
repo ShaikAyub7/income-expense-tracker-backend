@@ -13,6 +13,8 @@ export const createCategory = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
+
+  
   // #swagger.tags = ['Categories']
   const { name, description } = req.body;
   const userId = req.user?.userId;
@@ -72,6 +74,7 @@ export const getCategories = async (
     ...category,
     totalTransactions: (category as any)?._count?.transactions ?? 0,
   }));
+
   res.status(StatusCodes.OK).json({
     success: true,
     message: "categories fetched successfully",

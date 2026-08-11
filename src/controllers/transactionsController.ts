@@ -215,7 +215,6 @@ export const updateTransaction = async (req: Request, res: Response) => {
 
 export const deleteTransaction = async(req:Request,res:Response)=>{
     // #swagger.tags = ['Transactions']
-
   const userId = req.user?.userId;
   const id = String(req.params.id);
 
@@ -233,5 +232,6 @@ export const deleteTransaction = async(req:Request,res:Response)=>{
   res.status(StatusCodes.OK).json({
     success: true,
     message: "Transaction deleted successfully",
+    transaction:transaction.id,
   });
 }
